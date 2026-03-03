@@ -135,7 +135,6 @@ function loadAssets() {
         aud.loop = (key !== 'epic');
         loadedAudio[key] = aud;
     }
-    fetch(ASSETS.data.dialogue).then(r=>r.json()).then(data=>{dialogueData=data;}).catch(()=>{});
 }
 
 function canPlayerExit() {
