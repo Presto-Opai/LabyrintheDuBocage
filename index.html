@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Le Labyrinthe de Suisse normande</title>
+    <style>
+        body {
+            margin: 0; padding: 0; background-color: #1a3a1a; color: #fff;
+            font-family: 'Courier New', Courier, monospace; overflow: hidden;
+            display: flex; justify-content: center; align-items: center; height: 100vh;
+        }
+        #game-container { position: relative; width: 800px; height: 600px; border-radius: 12px; overflow: hidden; }
+        canvas { width: 100%; height: 100%; border-radius: 12px; box-shadow: 0 0 20px #fff5; }
+
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        #compass-container {
+            position: absolute; top: 10px; right: 10px; width: 150px; height: 150px;
+            display: none; border-radius: 50%; overflow: hidden;
+        }
+        #compass { width: 100%; height: 100%; }
+        #minimap-container {
+            position: absolute; top: 10px; left: 10px; width: 150px; height: 150px;
+            background: rgba(0,0,0,0.5); border: 2px solid gold; display: none; border-radius: 10px; overflow: hidden;
+        }
+        #minimap { width: 100%; height: 100%; border-radius: 10px; }
+
+        #dialogue-box {
+            position: absolute; bottom: 20px; left: 10%; width: 80%;
+            background: rgba(20, 10, 0, 0.85); border: 2px solid #8B6914; padding: 15px;
+            text-align: center; font-size: 18px; display: none; text-shadow: 1px 1px 2px #000;
+            border-radius: 12px;
+        }
+        .golden-text { color: gold; font-weight: bold; font-size: 22px; }
+
+        #overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10,30,10,0.85); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; pointer-events: auto;
+            border-radius: 12px;
+        }
+        button {
+            padding: 10px 20px; font-size: 18px; cursor: pointer; background: #2a4a2a;
+            color: #fff; border: 2px solid #8B6914; margin-top: 20px; font-family: inherit;
+            border-radius: 8px;
+        }
+        button:hover { background: #3a6a3a; }
+        #difficulty-choice { margin-top: 15px; }
+        #difficulty-choice button { margin: 0 10px; }
+
+
+        #flash {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: gold; opacity: 0; pointer-events: none; transition: opacity 2s;
+            border-radius: 12px;
+        }
+
+        #inventory {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10,20,5,0.9); display: none; pointer-events: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; box-sizing: border-box; border-radius: 12px;
+        }
+        #inventory h2 { color: gold; margin: 0 0 12px 0; font-size: 22px; }
+        #inventory .inv-list { list-style: none; padding: 0; margin: 0; text-align: center; }
+        #inventory .inv-list li { margin: 4px 0; font-size: 15px; }
+        #inventory .inv-empty { color: #888; font-style: italic; font-size: 15px; }
+        #inventory .inv-hint { color: #666; font-size: 12px; margin-top: 14px; }
+
+        #pickup-hint {
+            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+            background: rgba(20, 10, 0, 0.85); border: 2px solid gold; padding: 8px 18px;
+            color: gold; font-size: 16px; font-weight: bold; border-radius: 10px;
+            display: none; pointer-events: none; text-shadow: 1px 1px 2px #000;
+            animation: pickup-pulse 1.2s ease-in-out infinite;
+        }
+        @keyframes pickup-pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <canvas id="screen" width="400" height="300"></canvas>
+
+
+    <div id="ui-layer">
+        <div id="compass-container"><canvas id="compass" width="150" height="150"></canvas></div>
+        <div id="minimap-container"><canvas id="minimap" width="150" height="150"></canvas></div>
+        <div id="dialogue-box"><span id="dialogue-text"></span></div>
+        <div id="flash"></div>
+        <div id="pickup-hint">ESPACE — Ramasser</div>
+        <div id="inventory"></div>
+    </div>
+
+    <div id="overlay">
+        <h1 id="title">Le Labyrinthe de Suisse normande</h1>
+        <p id="instructions" style="text-align: center; max-width: 600px; line-height: 1.6;">
+            Quelque part dans ce dédale de haies vives se cache le célèbre
+            <b style="color:gold;">Trésor du Bocage</b> — et bien d'autres trésors
+            pour qui sait chercher.<br><br>
+            La sortie se trouve toujours au <b>coin Sud-Est</b>.
+            Mais prenez garde à la vache errante, gardienne farouche de ces chemins creux.<br><br>
+            <span style="color:#aaa; font-size: 14px;"><b>Z, Q, S, D</b> ou <b>flèches</b> pour se déplacer</span>
+        </p>
+
+        <div id="difficulty-choice">
+            <button id="btn-easy">Facile</button>
+            <button id="btn-hard">Difficile</button>
+        </div>
+        <button id="start-btn" style="display:none;">Entrer dans le Bocage</button>    </div>
+</div>
+
+<!-- Scripts du jeu (ordre important) -->
+<script src="js/data.js"></script>
+<script src="js/maze.js"></script>
+<script src="js/monsters.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/game.js"></script>
+
+</body>
+</html>
